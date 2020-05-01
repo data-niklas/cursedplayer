@@ -1,0 +1,27 @@
+name: cursedplayer
+version: 0.1.0
+
+authors:
+  - Niklas Loeser <niklas@4loeser.net>
+
+targets:
+  cursedplayer:
+    main: src/cursedplayer.cr
+
+dependencies:
+  cor:
+    github: watzon/cor
+  http_router:
+    github: data-niklas/http_router
+  conf:
+    github: data-niklas/conf
+  ncurses:
+    github: SamualLB/ncurses
+  mediaplayer:
+    github: data-niklas/mediaplayer
+  time_utils:
+    github: data-niklas/time_utils
+
+crystal: 0.33.0
+
+license: MIT

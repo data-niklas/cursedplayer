@@ -1,0 +1,38 @@
+version: 1.0
+shards:
+  conf:
+    github: data-niklas/conf
+    commit: 02655150c3ec413102cb79a2f5d98253ff14e888
+
+  cor:
+    github: watzon/cor
+    commit: 031e5e6168055211bee019df0ceea6d81af9c5d2
+
+  http_router:
+    github: data-niklas/http_router
+    commit: cf38d931c3107e13c943482c8ff2109534f6dcd9
+
+  mediaplayer:
+    github: data-niklas/mediaplayer
+    commit: 3971c417622fc558ad7e197c7dcedde2beab1856
+
+  ncurses:
+    github: SamualLB/ncurses
+    version: 0.0.7
+
+  radix:
+    github: luislavena/radix
+    version: 0.3.9
+
+  time_utils:
+    github: data-niklas/time_utils
+    commit: 04d2cfec9b99ec88c7338d08f7beff62389c9ec2
+
+  toml:
+    github: crystal-community/toml.cr
+    commit: d02de85eed68a70dc97ab6d6e52831a4d0e890fe
+
+  vlc:
+    github: data-niklas/vlc
+    commit: bd0bb4eedf20fcddd844a4e5f5d8feee8e3119f5
+
