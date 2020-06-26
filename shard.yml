@@ -16,7 +16,7 @@ dependencies:
   conf:
     github: data-niklas/conf
   ncurses:
-    github: SamualLB/ncurses
+    github: data-niklas/ncurses
   mediaplayer:
     github: data-niklas/mediaplayer
   time_utils:

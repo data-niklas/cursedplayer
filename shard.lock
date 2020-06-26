@@ -6,7 +6,7 @@ shards:
 
   cor:
     github: watzon/cor
-    commit: 031e5e6168055211bee019df0ceea6d81af9c5d2
+    commit: 4b6f8c210f7ae768ae283fc306967c66c7a8fae7
 
   http_router:
     github: data-niklas/http_router
@@ -14,10 +14,10 @@ shards:
 
   mediaplayer:
     github: data-niklas/mediaplayer
-    commit: 3971c417622fc558ad7e197c7dcedde2beab1856
+    commit: 864da3109ddbe3461ee6da77f963c395e4f1c30d
 
   ncurses:
-    github: SamualLB/ncurses
+    github: data-niklas/ncurses
     version: 0.0.7
 
   radix:
@@ -34,5 +34,5 @@ shards:
 
   vlc:
     github: data-niklas/vlc
-    commit: bd0bb4eedf20fcddd844a4e5f5d8feee8e3119f5
+    commit: e7db6330f2aa78cb325b1e9f5e488d906b9b3a0a
 

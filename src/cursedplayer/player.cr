@@ -14,13 +14,9 @@ module CursedPlayer
     def play
         list = @@player.list!
         if list.count == 0
-            library = CursedPlayer::Library.songs
-            library.count.times do |i|
-                list << library.get i
-            end
+            #CursedPlayer.library.add_to_queue
         end
         @@player.play
-
     end
 
     def player
@@ -38,4 +34,5 @@ module CursedPlayer
     def current_song=(song)
         @@current_song = song
     end
+
 end

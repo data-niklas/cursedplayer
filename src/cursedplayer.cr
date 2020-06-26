@@ -2,11 +2,13 @@
 require "./cursedplayer/*"
 require "option_parser"
 
+CursedPlayer.set_title "cursedplayer"
 
 GC.disable
 
-path = Path["~/.config/cursedplayer/cursedplayer.conf"].expand(home: true)
-folder = path.parent
+config = Path["~/.config/cursedplayer/cursedplayer.conf"].expand(home: true)
+library = Path["~/.config/cursedplayer/library.csv"].expand(home: true)
+folder = config.parent
 
 URL_REGEX = /(?:(?:https?|ftp):\/\/|\b(?:[a-z\d]+\.))(?:(?:[^\s()<>]+|\((?:[^\s()<>]+|(?:\([^\s()<>]+\)))?\))+(?:\((?:[^\s()<>]+|(?:\(?:[^\s()<>]+\)))?\)|[^\s`!()\[\]{};:'".,<>?«»“”‘’]))?/
 FORMAT = Time::Format.new("%H:%M:%S")
@@ -14,11 +16,15 @@ FORMAT = Time::Format.new("%H:%M:%S")
 if !Dir.exists? folder
   Dir.mkdir folder
 end
-if !File.exists? path
-  File.write path, ""
+if !File.exists? config
+  File.write config, ""
+end
+if !File.exists? library
+  File.write library, ""
 end
 
-CursedPlayer.load_config path
+
+CursedPlayer.load_config config
 
 picked_songs = [] of String
 OptionParser.parse do |parser|
@@ -26,9 +32,7 @@ OptionParser.parse do |parser|
     puts parser
     exit
   end
-  parser.on "-l=LIBRARY", "--library=LIBRARY", "Library mode" do |library|
-    CursedPlayer.conf["library"] = library == "true"
-  end
+
 
   parser.unknown_args do |args|
     picked_songs = args
@@ -36,10 +40,9 @@ OptionParser.parse do |parser|
 
 end
 
-CursedPlayer.register_events
 CursedPlayer.ui_init
-CursedPlayer.render_library_load
-CursedPlayer::Library.load_library picked_songs
-CursedPlayer.library_loaded
+#CursedPlayer.render_library_load
+CursedPlayer.load_library picked_songs, library
+CursedPlayer.register_events
+#CursedPlayer.library_loaded
 CursedPlayer.ui_loop
-puts "EXIT"
