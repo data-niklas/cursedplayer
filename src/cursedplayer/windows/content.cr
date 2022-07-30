@@ -110,10 +110,10 @@ module CursedPlayer
             render_scrolled @scroll_y - old
         end
 
-        def mouse_pressed(state, x, y, z, device_id)
+        def mouse_pressed(event, x, y, z)
             if !CursedPlayer.popup && @visible
-                if  state == NCurses::Mouse::B1Clicked || state == NCurses::Mouse::B1Pressed
-                elsif state.to_s == "B1DoubleClicked"
+                if event.state_includes? NCurses::Mouse::B1Clicked
+                elsif event.state_includes? NCurses::Mouse::B1DoubleClicked
                     song = y + @scroll_y
                     if song < CursedPlayer.queue.count
                         CursedPlayer.player.play_index song

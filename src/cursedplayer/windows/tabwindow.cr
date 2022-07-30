@@ -16,9 +16,9 @@ module CursedPlayer
       resize 1, CursedPlayer.w
       @tabs.each do |tab|
         tab.resize CursedPlayer.h - 4, CursedPlayer.w
-        tab.render
       end
       render
+      render_tab
     end
 
     def add_tab(tab)
@@ -29,16 +29,28 @@ module CursedPlayer
       end
     end
 
-    def mouse_pressed(state, x, y, z, device_id)
+    def mouse_pressed(event, x, y, z)
       if !CursedPlayer.popup
-        if (state.value > NCurses::Mouse::Position.value || state == NCurses::Mouse::B1Clicked || state == NCurses::Mouse::B1Pressed)   
-          offset = x - (x % @tabs.size)
+        if event.state_includes? NCurses::Mouse::B1Clicked   
           old = @selected
-          @selected = (offset / @tabs.size).to_i
-          if @selected < @tabs.size
+          index = 0
+          cx = 0
+          separator_length = CursedPlayer.conf["tab_separator"].to_s.size
+          w = self.width
+          while cx < w && index < @tabs.size
+            cx += @tabs[index].name.size + separator_length
+            if x < cx
+              @selected = index
+              break
+            end
+            index+=1
+          end
+
+          if old != @selected && @selected < @tabs.size
             @tabs[old].unselect
             @tabs[@selected].select
             render
+            @tabs[@selected].render
           end
         end
       end
@@ -58,11 +70,12 @@ module CursedPlayer
           attr_on NCurses::Attribute::Standout
           attr_on NCurses::Attribute::Bold
         end
-        print tab.name, 0, index*@tabs.size
+        print tab.name
         if index == selected
           attr_off NCurses::Attribute::Standout
           attr_off NCurses::Attribute::Bold
         end
+        print CursedPlayer.conf["tab_separator"].to_s
       end
       refresh
     end

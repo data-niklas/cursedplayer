@@ -67,78 +67,7 @@ module CursedPlayer extend self
 
     def get_keys
         NCurses.get_char_delegate_mouse do |ch|
-            if ch.is_a? NCurses::MouseEvent
-                mouse = ch.as(NCurses::MouseEvent)
-            elsif ch == NCurses::Key::Resize
-                @@h = NCurses.height
-                @@w = NCurses.width
-                resize_all
-            else
-                case @@mode
-                    when "default"
-                        case ch
-                            when ':'
-                                @@mode = "command"
-                                @@command = ":"
-                                render_command
-                            when 'n'
-                                @@player.next
-                            when 'p'
-                                @@player.previous
-                            when ' '
-                                if @@player.is_playing?
-                                    @@player.pause
-                                else
-                                    play
-                                end
-                            when NCurses::Key::Right
-                                @@player.set_time @@player.get_time + @@conf.as_i("time_delta")
-                            when NCurses::Key::Left
-                                @@player.set_time @@player.get_time - @@conf.as_i("time_delta")
-                            when NCurses::Key::Up
-                                @@tabs.event "Queue", "scroll", "up"
-                            when NCurses::Key::Down
-                                @@tabs.event "Queue", "scroll", "down"
-                            else
-                        end
-                    when "command"
-                        case ch
-                            when NCurses::Key::Backspace, NCurses::Key::Del
-                                if @@command.size > 0
-                                    @@command = @@command[0...-1]
-                                    if @@command.empty?
-                                        @@mode = "default"
-                                    end
-                                end
-                            when NCurses::Key::Esc
-                                @@command = ""
-                                @@mode = "default"
-                            when NCurses::Key::Enter
-                                if @@command.starts_with? ":"
-                                    cmd = @@command[1..]
-                                else
-                                    cmd = @@command
-                                end
-                                part1 = cmd
-                                if cmd.includes?(" ")
-                                    parts = cmd.split " ", 2
-                                    part1 = parts[0]
-                                    part2 = parts[1]
-                                else
-                                    part2 = ""
-                                end
-                                run_command part1, part2
-                                @@command = ""
-                                @@mode = "default"
-                            else
-                                if ch.is_a?(Char)
-                                    @@command += ch.to_s
-                                end
-                        end
-                        render_command
-                    else
-                end 
-            end
+            CursedPlayer.event ch
         end
             
     end
@@ -202,6 +131,7 @@ module CursedPlayer extend self
 
         @@tabs = TabBar.new
         @@tabs.add_tab(QueueTab.new "Queue")
+        @@tabs.add_tab(HelpTab.new "Help")
 
         NCurses.refresh
         render_status

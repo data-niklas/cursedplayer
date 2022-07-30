@@ -21,7 +21,7 @@ module CursedPlayer
             refresh
         end
 
-        def mouse_pressed(state, x, y, z, device_id)
+        def mouse_pressed(event, x, y, z)
         end
     end
 end

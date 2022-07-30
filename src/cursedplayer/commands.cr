@@ -10,6 +10,16 @@ module CursedPlayer
             when "q", "quit"
                 CursedPlayer.exit 
 
+            when "reload"
+                CursedPlayer.reload_config
+
+            when "edit"
+                CursedPlayer.open_config
+
+            when "save_metadata"
+                CursedPlayer.library.save
+
+
             when "stop"
                 CursedPlayer.stop
 
@@ -32,14 +42,6 @@ module CursedPlayer
             when "pause"
                 CursedPlayer.player.pause
 
-            when "reload"
-                CursedPlayer.reload_config
-
-            when "edit"
-                CursedPlayer.open_config
-
-            when "save_metadata"
-                CursedPlayer.library.save
 
             when "scroll_to"
                 if arg == "start"

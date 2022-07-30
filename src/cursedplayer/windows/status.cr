@@ -54,9 +54,9 @@ module CursedPlayer
             refresh
         end
 
-        def mouse_pressed(state, x, y, z, device_id)
+        def mouse_pressed(event, x, y, z)
             if !CursedPlayer.popup
-                if (state.value > NCurses::Mouse::Position.value || state == NCurses::Mouse::B1Clicked || state == NCurses::Mouse::B1Pressed)
+                if event.state_includes? NCurses::Mouse::B1Clicked
                     
                     if y == 0
                         if x < CursedPlayer.title_length

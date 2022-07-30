@@ -57,4 +57,106 @@ module CursedPlayer
             CursedPlayer.set_title "#{title} - #{artist}"
         end
     end
+
+
+    def event(ch)
+        if ch.is_a? NCurses::MouseEvent
+            mouse = ch.as(NCurses::MouseEvent)
+
+            case @@mode
+                when "default"
+                    if mouse.state_includes? NCurses::Mouse::B4Pressed
+                        @@tabs.event "Queue", "scroll", "up"
+                    elsif mouse.state_includes? NCurses::Mouse::B5Pressed
+                        @@tabs.event "Queue", "scroll", "down"
+                    end
+
+                when "command"
+  
+                else
+            end 
+        elsif ch == NCurses::Key::Resize
+            @@h = NCurses.height
+            @@w = NCurses.width
+            resize_all
+        else
+            case @@mode
+                when "default"
+                    CursedPlayer.default_key_press ch
+
+                when "command"
+                    CursedPlayer.command_key_press ch
+                    render_command
+                else
+            end 
+        end
+    end
+
+
+    def default_key_press(ch)
+        case ch
+            when ':'
+                @@mode = "command"
+                @@command = ":"
+                render_command
+            when 'n'
+                @@player.next
+            when 'p'
+                @@player.previous
+            when ' '
+                if @@player.is_playing?
+                    @@player.pause
+                else
+                    play
+                end
+            when NCurses::Key::Right
+                @@player.set_time @@player.get_time + @@conf.as_i("time_delta")
+            when NCurses::Key::Left
+                @@player.set_time @@player.get_time - @@conf.as_i("time_delta")
+            when NCurses::Key::Up
+                @@tabs.event "Queue", "scroll", "up"
+            when NCurses::Key::Down
+                @@tabs.event "Queue", "scroll", "down"
+            when NCurses::Key::Esc, NCurses::Key::Backspace
+                @@tabs.event "Help", "return"
+            else
+        end
+    end
+
+
+    def command_key_press(ch)
+        case ch
+            when NCurses::Key::Backspace, NCurses::Key::Del
+                if @@command.size > 0
+                    @@command = @@command[0...-1]
+                    if @@command.empty?
+                        @@mode = "default"
+                    end
+                end
+            when NCurses::Key::Esc
+                @@command = ""
+                @@mode = "default"
+            when NCurses::Key::Enter
+                if @@command.starts_with? ":"
+                    cmd = @@command[1..]
+                else
+                    cmd = @@command
+                end
+                part1 = cmd
+                if cmd.includes?(" ")
+                    parts = cmd.split " ", 2
+                    part1 = parts[0]
+                    part2 = parts[1]
+                else
+                    part2 = ""
+                end
+                run_command part1, part2
+                @@command = ""
+                @@mode = "default"
+            else
+                if ch.is_a?(Char)
+                    @@command += ch.to_s
+                end
+        end
+    end
 end

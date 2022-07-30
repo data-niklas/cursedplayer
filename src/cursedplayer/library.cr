@@ -17,31 +17,47 @@ module CursedPlayer
         @@parsing : Int32 = 0
         @@parsed : Int32 = 0
         @songtable = SongTable.new
+        @queue = Player::MediaList.new
         def initialize(songs : Array(String), @file : Path = "")
             list = CursedPlayer.player.list!
             @songtable = load_csv
+            add_to_queue
 
             if songs.size > 0
                 songs.each do |song|
                     list << Library.make_song(song)
                 end
+            else
+                #set_library_as_queue
+                #CursedPlayer.player.set @queue
+                if @songtable.size == 0
+                    CursedPlayer.error_no_songs
+                else
+                    @songtable.each_key do |song|
+                        list << Library.make_song(song)
+                    end
+                end
             end
 
         end
 
-        def add_to_queue
+
+        def set_library_as_queue
             list = CursedPlayer.player.list!
-            if @songtable.size == 0 && list.count == 0
-                CursedPlayer.error_no_songs
-            else
-                @songtable.each_key do |song|
-                    list << Library.make_song(song)
-                end
+            @queue.each { |song|
+                list << song
+            }
+        end
+
+
+        def add_to_queue
+            @songtable.each_key do |song|
+                @queue << Library.make_song(song)
             end
         end
 
         def self.make_song(url : String)
-            if url.starts_with?("http")
+            if url.starts_with?("http") || url.starts_with?("file://")
                 Player::Media.new(url, false)
             else
                 Player::Media.new url
